@@ -10,6 +10,7 @@ com\tideCore\PlayerDataManager.class
 com\tideCore\HarvesterFactory.class
 com\tideCore\PearlPayConfirmGUI.class
 com\tideCore\ReloadCommand.class
+com\tideCore\PearlsAdminCommand.class
 com\tideCore\PearlsLeaderboardCommand.class
 com\tideCore\HarvesterListener$1.class
 com\tideCore\BoosterManager$1.class
@@ -33,4 +34,3 @@ com\tideCore\HelpCommand.class
 com\tideCore\PrestigeGUI.class
 com\tideCore\PrestigeCommand.class
 com\tideCore\TokensAdminCommand.class
-com\tideCore\PearlsAdminSubCommand.class

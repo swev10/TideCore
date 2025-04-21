@@ -15,28 +15,25 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 public class PearlShopSubmenu implements Listener {
 
-    public static void open(Player player, String fileName) {
-        File file = new File(TideCore.getInstance().getDataFolder(), "Pearlshop_" + fileName + ".yml");
-        if (!file.exists()) {
-            player.sendMessage(MessageUtils.prefix() + "§cThat shop doesn't exist.");
+    public static void open(Player player, String category) {
+        File file = new File(TideCore.getInstance().getDataFolder(), "Pearlshop.yml");
+        YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
+
+        ConfigurationSection catSection = config.getConfigurationSection(category + ".items");
+        if (catSection == null) {
+            player.sendMessage(MessageUtils.prefix() + "§cCategory not found.");
             return;
         }
 
-        YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-        String title = MessageUtils.color(config.getString("menu.title", "&fPearl Shop"));
-        int rows = config.getInt("menu.rows", 3);
-        Inventory gui = Bukkit.createInventory(null, rows * 9, title);
+        String title = MessageUtils.color("&x&b&d&9&c&e&e&l" + category.toUpperCase());
+        Inventory gui = Bukkit.createInventory(null, 54, title);
 
-        ConfigurationSection items = config.getConfigurationSection("items");
-        if (items == null) return;
-
-        for (String key : items.getKeys(false)) {
-            ConfigurationSection itemSec = items.getConfigurationSection(key);
+        for (String key : catSection.getKeys(false)) {
+            ConfigurationSection itemSec = catSection.getConfigurationSection(key);
             if (itemSec == null) continue;
 
             Material mat = Material.matchMaterial(itemSec.getString("material", "STONE"));
@@ -45,16 +42,13 @@ public class PearlShopSubmenu implements Listener {
             ItemStack item = new ItemStack(mat);
             ItemMeta meta = item.getItemMeta();
 
-            meta.setDisplayName(MessageUtils.color(itemSec.getString("display_name", "&fItem")));
+            String displayName = itemSec.getString("display_name", "&fItem");
+            meta.setDisplayName(MessageUtils.color(displayName));
 
-            List<String> rawLore = itemSec.getStringList("lore");
-            List<String> lore = new ArrayList<>();
-            int pearls = PlayerDataManager.getPearls(player);
-
-            for (String line : rawLore) {
-                lore.add(MessageUtils.color(line.replace("{pearls}", String.valueOf(pearls))));
-            }
-
+            List<String> lore = itemSec.getStringList("lore").stream()
+                    .map(line -> MessageUtils.color(
+                            line.replace("%pearls%", String.valueOf(PlayerDataManager.getPearls(player)))
+                    )).toList();
             meta.setLore(lore);
 
             if (itemSec.getBoolean("enchanted", false)) {
@@ -74,52 +68,45 @@ public class PearlShopSubmenu implements Listener {
     @EventHandler
     public void onClick(InventoryClickEvent e) {
         if (!(e.getWhoClicked() instanceof Player player)) return;
-        String title = e.getView().getTitle();
-        if (!title.contains("Shop")) return;
+        Inventory inv = e.getInventory();
 
+        if (!e.getView().getTitle().contains("PEARLSHOP")) return;
         e.setCancelled(true);
 
         ItemStack clicked = e.getCurrentItem();
         if (clicked == null || !clicked.hasItemMeta()) return;
 
-        String clickedName = clicked.getItemMeta().getDisplayName();
+        File file = new File(TideCore.getInstance().getDataFolder(), "Pearlshop.yml");
+        YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 
-        File[] files = TideCore.getInstance().getDataFolder().listFiles((dir, name) -> name.startsWith("Pearlshop_"));
-        if (files == null) return;
+        String catName = e.getView().getTitle().replace("§x§b§d§9§c§e§e§l", "").toLowerCase();
+        ConfigurationSection section = config.getConfigurationSection(catName + ".items");
+        if (section == null) return;
 
-        for (File file : files) {
-            YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-            ConfigurationSection items = config.getConfigurationSection("items");
-            if (items == null) continue;
+        for (String key : section.getKeys(false)) {
+            ConfigurationSection itemSec = section.getConfigurationSection(key);
+            if (itemSec == null) continue;
 
-            for (String key : items.getKeys(false)) {
-                ConfigurationSection itemSec = items.getConfigurationSection(key);
-                if (itemSec == null) continue;
+            String configName = MessageUtils.color(itemSec.getString("display_name", ""));
+            if (clicked.getItemMeta().getDisplayName().equals(configName)) {
 
-                String configName = MessageUtils.color(itemSec.getString("display_name", ""));
-                if (!clickedName.equals(configName)) continue;
-
-                int price = itemSec.getInt("price", 0);
-                if (price > 0) {
-                    int current = PlayerDataManager.getPearls(player);
-                    if (current < price) {
-                        player.sendMessage(MessageUtils.prefix() + "§cThis costs §x§b§d§9§c§e§e" + price + " Pearls §cbut you only have §f" + current + "§c!");
-                        player.playSound(player.getLocation(), org.bukkit.Sound.BLOCK_NOTE_BLOCK_BASS, 1f, 1.2f);
-                        return;
-                    }
-
-                    PlayerDataManager.takePearls(player, price);
-                    player.sendMessage(MessageUtils.prefix() + "§aPurchased for §x§b§d§9§c§e§e" + price + " Pearls!");
-                    player.playSound(player.getLocation(), org.bukkit.Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1.3f);
-                    PlayerDataManager.logPurchase(player, clickedName);
+                int cost = itemSec.getInt("price", 0);
+                if (PlayerDataManager.getPearls(player) < cost) {
+                    player.sendMessage(MessageUtils.prefix() + "§cThis costs §5" + cost + " pearls §cbut you only have §5" + PlayerDataManager.getPearls(player));
+                    player.playSound(player.getLocation(), org.bukkit.Sound.ENTITY_VILLAGER_NO, 1f, 0.9f);
+                    return;
                 }
 
-                String cmd = itemSec.getString("command");
-                if (cmd != null && !cmd.isEmpty()) {
-                    player.closeInventory();
-                    player.performCommand(cmd.replace("%player%", player.getName()));
+                PlayerDataManager.takePearls(player, cost);
+                String command = itemSec.getString("command", "").replace("%player%", player.getName());
+                if (!command.isEmpty()) {
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
                 }
-                return;
+
+                player.sendMessage(MessageUtils.prefix() + "§aPurchased for §5" + cost + " pearls!");
+                player.playSound(player.getLocation(), org.bukkit.Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1.2f);
+                player.closeInventory();
+                break;
             }
         }
     }

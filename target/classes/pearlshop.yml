@@ -8,43 +8,98 @@ items:
     material: EMERALD
     display_name: "&aBoosters"
     lore:
-      - "&7Click to view Boosters!"
-      - "&7Pearls: &x&b&d&9&c&e&e{pearls}"
+      - "&7test1"
+      - "&7test2"
       - "&7test3"
       - "&7test4"
-    command: "shop_boosters"
+    command: "open_submenu boosters"
 
   keys:
     slot: 21
     material: TRIPWIRE_HOOK
     display_name: "&eCrate Keys"
     lore:
-      - "&7Click to view Crate Keys!"
-      - "&7Pearls: &x&b&d&9&c&e&e{pearls}"
+      - "&7test1"
+      - "&7test2"
       - "&7test3"
       - "&7test4"
-    command: "shop_keys"
+    command: "open_submenu keys"
 
   gens:
     slot: 22
     material: LIME_GLAZED_TERRACOTTA
     display_name: "&bGenerator Slots"
     lore:
-      - "&7Unlock more generator slots."
-      - "&7Pearls: &x&b&d&9&c&e&e{pearls}"
+      - "&7test1"
+      - "&7test2"
       - "&7test3"
       - "&7test4"
-    command: "shop_gens"
+    command: "open_submenu gens"
 
   cosmetics:
     slot: 23
     material: LEATHER_CHESTPLATE
     display_name: "&dCosmetics"
     lore:
-      - "&7Customize your look!"
-      - "&7Pearls: &x&b&d&9&c&e&e{pearls}"
+      - "&7test1"
+      - "&7test2"
       - "&7test3"
       - "&7test4"
     enchanted: true
     hide_enchants: true
-    command: "shop_cosmetics"
+    command: "open_submenu cosmetics"
+
+boosters:
+  items:
+    booster1:
+      slot: 20
+      material: EMERALD
+      display_name: "&a2x XP Booster"
+      lore:
+        - "&7Grants double XP for 15 minutes"
+        - "&7Exclusive boost!"
+        - ""
+        - "&7Cost: &5%pearls% Pearls"
+      price: 100
+      command: "givebooster 15 2 %player%"
+
+keys:
+  items:
+    key1:
+      slot: 20
+      material: TRIPWIRE_HOOK
+      display_name: "&eVote Key x1"
+      lore:
+        - "&7A key for the vote crate"
+        - ""
+        - "&7Cost: &5%pearls% Pearls"
+      price: 25
+      command: "crate give %player% vote 1"
+
+gens:
+  items:
+    genslot1:
+      slot: 20
+      material: LIME_GLAZED_TERRACOTTA
+      display_name: "&b+1 Generator Slot"
+      lore:
+        - "&7Increases your generator cap"
+        - ""
+        - "&7Cost: &5%pearls% Pearls"
+      price: 250
+      command: "genslots add %player% 1"
+
+cosmetics:
+  items:
+    hat1:
+      slot: 20
+      material: LEATHER_CHESTPLATE
+      display_name: "&dPink Chest Cosmetic"
+      lore:
+        - "&7Stand out with style!"
+        - ""
+        - "&7Cost: &5%pearls% Pearls"
+      enchanted: true
+      hide_enchants: true
+      price: 150
+      command: "cosmetics give %player% chest_pink"
