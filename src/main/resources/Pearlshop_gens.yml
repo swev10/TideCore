@@ -1,0 +1,32 @@
+menu:
+  title: "&bGenerator Slot Shop"
+  rows: 3
+
+items:
+  basic_slot:
+    slot: 11
+    material: STONE
+    display_name: "&7+1 Gen Slot"
+    lore:
+      - "&7Unlocks 1 more generator slot"
+      - ""
+      - "&eCost: 250 Pearls"
+    price: 250
+    command: "gens addslot %player% 1"
+
+  advanced_slot:
+    slot: 13
+    material: IRON_BLOCK
+    display_name: "&f+3 Gen Slots"
+    lore:
+      - "&7Unlocks 3 more generator slots"
+      - ""
+      - "&eCost: 600 Pearls"
+    price: 600
+    command: "gens addslot %player% 3"
+
+  back:
+    slot: 22
+    material: BARRIER
+    display_name: "&cBack to Main Menu"
+    command: "pearlshop"

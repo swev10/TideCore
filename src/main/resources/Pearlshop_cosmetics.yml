@@ -1,0 +1,38 @@
+menu:
+  title: "&dCosmetics Shop"
+  rows: 3
+
+items:
+  rainbow_chestplate:
+    slot: 11
+    material: LEATHER_CHESTPLATE
+    display_name: "&dRainbow Chestplate"
+    lore:
+      - "&7Glowing armor"
+      - "&7Purely cosmetic"
+      - ""
+      - "&eCost: 400 Pearls"
+    price: 400
+    enchanted: true
+    hide_enchants: true
+    command: "givecosmetic %player% rainbow_chestplate"
+
+  rainbow_hat:
+    slot: 13
+    material: LEATHER_HELMET
+    display_name: "&dRainbow Hat"
+    lore:
+      - "&7Glowing armor"
+      - "&7Purely cosmetic"
+      - ""
+      - "&eCost: 300 Pearls"
+    price: 300
+    enchanted: true
+    hide_enchants: true
+    command: "givecosmetic %player% rainbow_hat"
+
+  back:
+    slot: 22
+    material: BARRIER
+    display_name: "&cBack to Main Menu"
+    command: "pearlshop"

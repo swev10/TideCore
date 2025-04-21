@@ -1,0 +1,7 @@
+prefix: '&8[&#7BB8E9&lTide&#9ECFF6&lGen&8] &f• '
+
+prestige:
+  base-cost: 50000
+  max: 10
+  broadcast: true
+  reset-xp-on-prestige: true

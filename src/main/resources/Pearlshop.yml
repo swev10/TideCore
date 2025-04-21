@@ -1,0 +1,50 @@
+menu:
+  title: "&x&b&d&9&c&e&e&lPearl Shop"
+  rows: 4
+
+items:
+  boosters:
+    slot: 20
+    material: EMERALD
+    display_name: "&aBoosters"
+    lore:
+      - "&7Click to view Boosters!"
+      - "&7Pearls: &x&b&d&9&c&e&e{pearls}"
+      - "&7test3"
+      - "&7test4"
+    command: "shop_boosters"
+
+  keys:
+    slot: 21
+    material: TRIPWIRE_HOOK
+    display_name: "&eCrate Keys"
+    lore:
+      - "&7Click to view Crate Keys!"
+      - "&7Pearls: &x&b&d&9&c&e&e{pearls}"
+      - "&7test3"
+      - "&7test4"
+    command: "shop_keys"
+
+  gens:
+    slot: 22
+    material: LIME_GLAZED_TERRACOTTA
+    display_name: "&bGenerator Slots"
+    lore:
+      - "&7Unlock more generator slots."
+      - "&7Pearls: &x&b&d&9&c&e&e{pearls}"
+      - "&7test3"
+      - "&7test4"
+    command: "shop_gens"
+
+  cosmetics:
+    slot: 23
+    material: LEATHER_CHESTPLATE
+    display_name: "&dCosmetics"
+    lore:
+      - "&7Customize your look!"
+      - "&7Pearls: &x&b&d&9&c&e&e{pearls}"
+      - "&7test3"
+      - "&7test4"
+    enchanted: true
+    hide_enchants: true
+    command: "shop_cosmetics"

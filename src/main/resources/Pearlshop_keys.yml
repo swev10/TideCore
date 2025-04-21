@@ -1,0 +1,34 @@
+menu:
+  title: "&eCrate Key Shop"
+  rows: 3
+
+items:
+  vote_key:
+    slot: 11
+    material: TRIPWIRE_HOOK
+    display_name: "&aVote Key"
+    lore:
+      - "&7Use at /warp crates"
+      - "&7Type: Vote"
+      - ""
+      - "&eCost: 100 Pearls"
+    price: 100
+    command: "crate givekey %player% vote 1"
+
+  rare_key:
+    slot: 13
+    material: TRIPWIRE_HOOK
+    display_name: "&bRare Key"
+    lore:
+      - "&7Use at /warp crates"
+      - "&7Type: Rare"
+      - ""
+      - "&eCost: 350 Pearls"
+    price: 350
+    command: "crate givekey %player% rare 1"
+
+  back:
+    slot: 22
+    material: BARRIER
+    display_name: "&cBack to Main Menu"
+    command: "pearlshop"

@@ -1,0 +1,54 @@
+name: TideCore
+version: 1.0
+main: com.tideCore.TideCore
+api-version: 1.20
+description: Core plugin for TideGen
+
+commands:
+  tidecore:
+    description: Root TideCore command
+    usage: /tidecore <subcommand>
+    permission: tidecore.admin
+
+  prestige:
+    description: Prestige to gain permanent progress
+    usage: /prestige
+    permission: tidecore.prestige
+
+  tokens:
+    description: View or manage tokens
+    usage: /tokens
+    permission: tidecore.tokens
+
+  pearls:
+    description: View or manage pearls
+    usage: /pearls
+    permission: tidecore.player
+
+  pearlshop:
+    description: Opens the Pearl Shop menu
+    usage: /pearlshop
+    permission: tidecore.player
+
+permissions:
+  tidecore.admin:
+    description: Access to TideCore admin features
+    default: op
+
+  tidecore.prestige:
+    description: Allows player to use /prestige
+    default: true
+
+  tidecore.tokens:
+    description: Access to view/manage tokens
+    default: true
+
+  tidecore.player:
+    description: General access to player commands and features
+    default: true
+
+depend:
+  - Vault
+  - WorldGuard
+  - WorldEdit
+  - PlaceholderAPI
