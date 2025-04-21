@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import java.util.Collections;
 import java.util.List;
 
-public class PearlsAdminSubCommand implements SubCommand {
+public class PearlsAdminCommand implements SubCommand {
 
     @Override
     public String getName() {

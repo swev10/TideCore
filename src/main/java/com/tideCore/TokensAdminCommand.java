@@ -40,8 +40,8 @@ public class TokensAdminCommand implements SubCommand {
         switch (action) {
             case "give" -> PlayerDataManager.addTokens(target, amount);
             case "take" -> PlayerDataManager.takeTokens(target, amount);
-            case "set" -> PlayerDataManager.setTokens(target, amount);
-            default -> {
+            case "set"  -> PlayerDataManager.setTokens(target, amount);
+            default     -> {
                 sender.sendMessage(MessageUtils.prefix() + "§cUnknown action: " + action);
                 return;
             }
@@ -53,7 +53,8 @@ public class TokensAdminCommand implements SubCommand {
     @Override
     public List<String> tabComplete(CommandSender sender, String[] args) {
         if (args.length == 2) return List.of("give", "take", "set");
-        if (args.length == 3) return null;
+        if (args.length == 3) return Bukkit.getOnlinePlayers().stream().map(Player::getName).toList();
+        if (args.length == 4) return List.of("100", "500", "1000");
         return Collections.emptyList();
     }
 }
