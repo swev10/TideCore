@@ -13,10 +13,8 @@ public class TideCoreCommand implements CommandExecutor, TabCompleter {
         registerSubCommand(new HelpCommand());
         registerSubCommand(new ReloadCommand());
         registerSubCommand(new GiveCommand());
-        registerSubCommand(new SelectCropCommand());
-        registerSubCommand(new ReloadCommand());
-        registerSubCommand(new TokensAdminCommand());
-        registerSubCommand(new PearlsAdminSubCommand());
+        registerSubCommand(new TokensAdminCommand()); // ✅ MATCHES YOUR CLASS
+        registerSubCommand(new PearlsAdminCommand()); // ✅ MATCHES OTHER ADMIN CLASS
     }
 
     private void registerSubCommand(SubCommand cmd) {
@@ -52,7 +50,7 @@ public class TideCoreCommand implements CommandExecutor, TabCompleter {
 
         if (args.length == 1) {
             return subcommands.keySet().stream()
-                    .filter(s -> s.toLowerCase().startsWith(args[0].toLowerCase()))
+                    .filter(s -> s.startsWith(args[0].toLowerCase()))
                     .toList();
         }
 
