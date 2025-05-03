@@ -42,13 +42,9 @@ public class TidegenPlaceholders extends PlaceholderExpansion {
             case "tokens"       -> String.valueOf(PlayerDataManager.getTokens(player));
             case "pearls"       -> String.valueOf(PlayerDataManager.getPearls(player));
             case "pearls_formatted" -> format(PlayerDataManager.getPearls(player));
-            case "xp"           -> String.valueOf(PlayerDataManager.getXP(player));
+            case "xp"           -> String.valueOf((PlayerDataManager.getXP(player)));
             case "level"        -> String.valueOf(PlayerDataManager.getLevel(player));
-            case "xpbar"        -> XPUtils.getProgressBar(
-                    player,
-                    PlayerDataManager.getXP(player),
-                    PlayerDataManager.getLevel(player)
-            );
+            case "xpbar" -> XPUtils.getProgressBar(player);
             case "prestige"     -> String.valueOf(PlayerDataManager.getPrestige(player));
             default             -> null;
         };

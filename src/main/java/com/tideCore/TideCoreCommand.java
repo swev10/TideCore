@@ -13,8 +13,9 @@ public class TideCoreCommand implements CommandExecutor, TabCompleter {
         registerSubCommand(new HelpCommand());
         registerSubCommand(new ReloadCommand());
         registerSubCommand(new GiveCommand());
-        registerSubCommand(new TokensAdminCommand()); // ✅ MATCHES YOUR CLASS
-        registerSubCommand(new PearlsAdminCommand()); // ✅ MATCHES OTHER ADMIN CLASS
+        registerSubCommand(new TokensAdminCommand());
+        registerSubCommand(new PearlsAdminCommand());
+        registerSubCommand(new XpAdminCommand()); // ✅ New XP command
     }
 
     private void registerSubCommand(SubCommand cmd) {

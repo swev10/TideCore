@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerDataManager {
@@ -37,7 +38,7 @@ public class PlayerDataManager {
         }
     }
 
-    // XP + Level
+    // XP & Level
     public static int getXP(Player player) {
         return get(player).getInt("xp", 0);
     }
@@ -48,7 +49,8 @@ public class PlayerDataManager {
     }
 
     public static void addXP(Player player, int xp) {
-        setXP(player, getXP(player) + xp);
+        int current = getXP(player);
+        setXP(player, current + xp); // This will save automatically
     }
 
     public static int getLevel(Player player) {
@@ -80,8 +82,14 @@ public class PlayerDataManager {
     }
 
     public static void setTokens(Player player, int value) {
-        get(player).set("tokens", Math.max(0, value));
-        save(player);
+        File file = getFile(player);
+        FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+        config.set("tokens", Math.max(0, value));
+        try {
+            config.save(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void addTokens(Player player, int amount) {
@@ -98,8 +106,14 @@ public class PlayerDataManager {
     }
 
     public static void setPearls(Player player, int value) {
-        get(player).set("pearls", Math.max(0, value));
-        save(player);
+        File file = getFile(player);
+        FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+        config.set("pearls", Math.max(0, value));
+        try {
+            config.save(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void addPearls(Player player, int amount) {
@@ -114,12 +128,16 @@ public class PlayerDataManager {
     public static void logPurchase(Player player, String itemName) {
         FileConfiguration config = get(player);
         List<String> purchases = config.getStringList("purchases");
+
+        if (purchases == null) purchases = new ArrayList<>();
         purchases.add(itemName);
+
         config.set("purchases", purchases);
         save(player);
     }
 
     public static List<String> getPurchases(Player player) {
-        return get(player).getStringList("purchases");
+        List<String> purchases = get(player).getStringList("purchases");
+        return purchases != null ? purchases : new ArrayList<>();
     }
 }

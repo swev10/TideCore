@@ -7,7 +7,9 @@ import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Ageable;
@@ -43,7 +45,7 @@ public class HarvesterListener implements Listener {
         Material cropType = block.getType();
         if (!allowedCrops.contains(cropType)) return;
 
-        event.setCancelled(true); // Always cancel crop breaking for these
+        event.setCancelled(true);
 
         if (!isHarvesterHoe(player.getInventory().getItemInMainHand())) {
             player.sendMessage(MessageUtils.color("&cPlease use your harvester hoe to harvest crops."));
@@ -58,39 +60,21 @@ public class HarvesterListener implements Listener {
 
         block.setType(Material.AIR);
 
-        TideCore.getEconomy().depositPlayer(player, 2.50);
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR,
-                new TextComponent("§x§a§4§f§a§a§6+$2.50"));
+        double money = 2.50;
+        int xp = 5;
+        int tokens = 1;
 
-        int gainedXP = BoosterManager.getBoostedXP(5, player);
-        PlayerDataManager.addXP(player, gainedXP);
+        int boostedXP = BoosterManager.getBoostedXP(xp, player);
+
+        TideCore.getEconomy().depositPlayer(player, money);
+        PlayerDataManager.addXP(player, xp);
         XPUtils.checkLevelUp(player);
 
+        player.spigot().sendMessage(ChatMessageType.ACTION_BAR,
+                new TextComponent("§8+§a$2.50 §8| §8+§b🧪 5 XP §8| §8+§e★1 Token"));
         player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1f, 2f);
+
         animateRegrowth(block, cropType, 5);
-    }
-
-    @EventHandler
-    public void onCropTrampleByPlayer(PlayerInteractEvent event) {
-        if (event.getAction() == Action.PHYSICAL &&
-                event.getClickedBlock() != null &&
-                event.getClickedBlock().getType() == Material.FARMLAND) {
-            event.setCancelled(true);
-        }
-    }
-
-    @EventHandler
-    public void onCropTrampleByEntity(EntityInteractEvent event) {
-        if (event.getBlock().getType() == Material.FARMLAND) {
-            event.setCancelled(true);
-        }
-    }
-
-    @EventHandler
-    public void onCropFade(BlockFadeEvent event) {
-        if (event.getBlock().getType() == Material.FARMLAND) {
-            event.setCancelled(true);
-        }
     }
 
     private boolean isHarvesterHoe(ItemStack item) {
@@ -122,5 +106,28 @@ public class HarvesterListener implements Listener {
                 stage++;
             }
         }.runTaskTimer(TideCore.getInstance(), 20L, (seconds * 20L) / maxAge);
+    }
+
+    @EventHandler
+    public void onCropTrampleByPlayer(PlayerInteractEvent event) {
+        if (event.getAction() == Action.PHYSICAL &&
+                event.getClickedBlock() != null &&
+                event.getClickedBlock().getType() == Material.FARMLAND) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onCropTrampleByEntity(EntityInteractEvent event) {
+        if (event.getBlock().getType() == Material.FARMLAND) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onCropFade(BlockFadeEvent event) {
+        if (event.getBlock().getType() == Material.FARMLAND) {
+            event.setCancelled(true);
+        }
     }
 }

@@ -15,17 +15,25 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.List;
 
 public class PearlShop implements Listener {
 
-    private static YamlConfiguration config;
+    public static YamlConfiguration config;
 
     public static void load() {
         File file = new File(TideCore.getInstance().getDataFolder(), "Pearlshop.yml");
+
         if (!file.exists()) {
-            Bukkit.getLogger().warning("[TideCore] Pearlshop.yml not found!");
-            return;
+            InputStream defaultStream = TideCore.getInstance().getResource("Pearlshop.yml");
+            if (defaultStream != null) {
+                TideCore.getInstance().saveResource("Pearlshop.yml", false);
+                Bukkit.getLogger().info("[TideCore] Pearlshop.yml copied to plugin folder.");
+            } else {
+                Bukkit.getLogger().severe("[TideCore] Missing Pearlshop.yml in plugin JAR!");
+                return;
+            }
         }
 
         config = YamlConfiguration.loadConfiguration(file);
@@ -60,14 +68,9 @@ public class PearlShop implements Listener {
 
             ItemStack item = new ItemStack(mat);
             ItemMeta meta = item.getItemMeta();
-            if (meta == null) continue;
 
-            String display = itemSec.getString("display_name", "&fItem");
-            meta.setDisplayName(MessageUtils.color(display));
-
-            List<String> lore = itemSec.getStringList("lore").stream()
-                    .map(line -> MessageUtils.color(line.replace("{pearls}", String.valueOf(PlayerDataManager.getPearls(player)))))
-                    .toList();
+            meta.setDisplayName(MessageUtils.color(itemSec.getString("display_name", "&fItem")));
+            List<String> lore = itemSec.getStringList("lore").stream().map(MessageUtils::color).toList();
             meta.setLore(lore);
 
             if (itemSec.getBoolean("enchanted", false)) {
@@ -78,7 +81,8 @@ public class PearlShop implements Listener {
             }
 
             item.setItemMeta(meta);
-            gui.setItem(itemSec.getInt("slot", 0), item);
+            int slot = itemSec.getInt("slot", 0);
+            gui.setItem(slot, item);
         }
 
         player.openInventory(gui);
@@ -87,29 +91,29 @@ public class PearlShop implements Listener {
     @EventHandler
     public void onClick(InventoryClickEvent e) {
         if (!(e.getWhoClicked() instanceof Player player)) return;
-        if (!e.getView().getTitle().contains("Pearl Shop")) return;
+        if (e.getView().getTitle().contains("Pearl Shop")) {
+            e.setCancelled(true);
 
-        e.setCancelled(true);
+            ItemStack clicked = e.getCurrentItem();
+            if (clicked == null || !clicked.hasItemMeta()) return;
 
-        ItemStack clicked = e.getCurrentItem();
-        if (clicked == null || !clicked.hasItemMeta()) return;
+            String clickedName = clicked.getItemMeta().getDisplayName();
+            ConfigurationSection items = config.getConfigurationSection("items");
+            if (items == null) return;
 
-        String clickedName = clicked.getItemMeta().getDisplayName();
-        ConfigurationSection items = config.getConfigurationSection("items");
-        if (items == null) return;
+            for (String key : items.getKeys(false)) {
+                ConfigurationSection itemSec = items.getConfigurationSection(key);
+                if (itemSec == null) continue;
 
-        for (String key : items.getKeys(false)) {
-            ConfigurationSection itemSec = items.getConfigurationSection(key);
-            if (itemSec == null) continue;
-
-            String configName = MessageUtils.color(itemSec.getString("display_name", ""));
-            if (clickedName.equals(configName)) {
-                String cmd = itemSec.getString("command");
-                if (cmd != null && !cmd.isEmpty()) {
-                    player.closeInventory();
-                    player.performCommand(cmd);
+                String configName = MessageUtils.color(itemSec.getString("display_name", ""));
+                if (clickedName.equals(configName)) {
+                    String cmd = itemSec.getString("command");
+                    if (cmd != null && !cmd.isEmpty()) {
+                        player.closeInventory();
+                        player.performCommand(cmd);
+                    }
+                    break;
                 }
-                break;
             }
         }
     }

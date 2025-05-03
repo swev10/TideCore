@@ -13,6 +13,8 @@ com\tideCore\ReloadCommand.class
 com\tideCore\PearlsAdminCommand.class
 com\tideCore\PearlsLeaderboardCommand.class
 com\tideCore\HarvesterListener$1.class
+com\tideCore\PrestigeGUI$1.class
+com\tideCore\XpAdminCommand.class
 com\tideCore\BoosterManager$1.class
 com\tideCore\PearlsCommand.class
 com\tideCore\PearlShopSubmenu.class

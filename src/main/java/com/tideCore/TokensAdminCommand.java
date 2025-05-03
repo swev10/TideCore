@@ -23,38 +23,37 @@ public class TokensAdminCommand implements SubCommand {
 
         String action = args[1].toLowerCase();
         Player target = Bukkit.getPlayerExact(args[2]);
-        int amount;
 
         if (target == null) {
             sender.sendMessage(MessageUtils.prefix() + "§cPlayer not found.");
             return;
         }
 
+        int amount;
         try {
             amount = Integer.parseInt(args[3]);
         } catch (NumberFormatException e) {
-            sender.sendMessage(MessageUtils.prefix() + "§cInvalid amount.");
+            sender.sendMessage(MessageUtils.prefix() + "§cInvalid number: " + args[3]);
             return;
         }
 
         switch (action) {
             case "give" -> PlayerDataManager.addTokens(target, amount);
             case "take" -> PlayerDataManager.takeTokens(target, amount);
-            case "set"  -> PlayerDataManager.setTokens(target, amount);
-            default     -> {
+            case "set" -> PlayerDataManager.setTokens(target, amount);
+            default -> {
                 sender.sendMessage(MessageUtils.prefix() + "§cUnknown action: " + action);
                 return;
             }
         }
 
-        sender.sendMessage(MessageUtils.prefix() + "§aUpdated §e" + target.getName() + "§a's tokens.");
+        sender.sendMessage(MessageUtils.prefix() + "§aUpdated tokens for §e" + target.getName() + "§a successfully.");
     }
 
     @Override
     public List<String> tabComplete(CommandSender sender, String[] args) {
         if (args.length == 2) return List.of("give", "take", "set");
-        if (args.length == 3) return Bukkit.getOnlinePlayers().stream().map(Player::getName).toList();
-        if (args.length == 4) return List.of("100", "500", "1000");
+        if (args.length == 3) return null;
         return Collections.emptyList();
     }
 }
